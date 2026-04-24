@@ -22,4 +22,6 @@ Prebuilt binaries are published for linux/amd64, linux/arm64, darwin/amd64, and 
 ghget https://github.com/OWNER/REPO/releases/download/TAG/ASSET
 ```
 
+The easiest way to get that URL: on any GitHub release page, right-click an asset in the Assets list and choose "Copy link address" — that's exactly the argument `ghget` expects.
+
 For private repos, set `GITHUB_TOKEN` in the environment.
