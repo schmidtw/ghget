@@ -1,6 +1,6 @@
 # ghget
 
-A simple zero-dependency tool for downloading GitHub release assets.
+A simple zero-dependency tool for downloading GitHub release assets — most useful when you're SSH'd into a remote VM and need to grab a tool from GitHub fast.
 
 ## install
 
