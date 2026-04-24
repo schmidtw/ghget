@@ -1,0 +1,77 @@
+#!/bin/sh
+# ghget installer — https://github.com/schmidtw/ghget
+set -eu
+
+VERSION="@@VERSION@@"
+REPO="schmidtw/ghget"
+
+msg() { printf '%s\n' "$*" >&2; }
+die() { msg "error: $*"; exit 1; }
+
+os_raw="$(uname -s)"
+arch_raw="$(uname -m)"
+
+case "$os_raw" in
+  Linux)  os_part=linux ;;
+  Darwin) os_part=darwin ;;
+  *) die "unsupported OS: $os_raw. prebuilt releases exist for Linux and macOS only. build from source: go install github.com/schmidtw/ghget/cmd/ghget@latest" ;;
+esac
+
+case "$arch_raw" in
+  x86_64|amd64)  arch_part=amd64 ;;
+  aarch64|arm64) arch_part=arm64 ;;
+  *) die "unsupported arch: $arch_raw. prebuilt releases exist for amd64 and arm64 only. build from source: go install github.com/schmidtw/ghget/cmd/ghget@latest" ;;
+esac
+
+ver_bare="${VERSION#v}"
+archive="ghget_${ver_bare}_${os_part}_${arch_part}.tar.gz"
+base="https://github.com/${REPO}/releases/download/${VERSION}"
+
+if command -v sha256sum >/dev/null 2>&1; then
+  sha_cmd="sha256sum"
+elif command -v shasum >/dev/null 2>&1; then
+  sha_cmd="shasum -a 256"
+else
+  die "need sha256sum or shasum on PATH"
+fi
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+msg "downloading ${archive}"
+curl -fsSL "${base}/${archive}"    -o "${tmp}/${archive}"
+curl -fsSL "${base}/checksums.txt" -o "${tmp}/checksums.txt"
+
+msg "verifying checksum"
+grep " ${archive}\$" "${tmp}/checksums.txt" > "${tmp}/expected.txt" \
+  || die "no checksum entry for ${archive}"
+(cd "$tmp" && $sha_cmd -c expected.txt >/dev/null) \
+  || die "checksum mismatch for ${archive}"
+
+msg "extracting"
+tar -xzf "${tmp}/${archive}" -C "${tmp}" ghget
+
+install_dir=""
+for cand in "$HOME/.local/bin" "$HOME/bin"; do
+  case ":${PATH}:" in
+    *":${cand}:"*)
+      if [ -d "$cand" ] && [ -w "$cand" ]; then
+        install_dir="$cand"
+        break
+      fi
+      ;;
+  esac
+done
+
+if [ -n "$install_dir" ]; then
+  mv "${tmp}/ghget" "${install_dir}/ghget"
+  chmod +x "${install_dir}/ghget"
+  msg "installed: ${install_dir}/ghget"
+  msg "run: ghget --help"
+else
+  mv "${tmp}/ghget" "./ghget"
+  chmod +x "./ghget"
+  msg ""
+  msg "couldn't find a writable directory on \$PATH (tried ~/.local/bin and ~/bin)."
+  msg "dropped the binary in $(pwd)/ghget — move it somewhere on your \$PATH yourself."
+fi

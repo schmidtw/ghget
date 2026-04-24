@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ghget — download GitHub release assets</title>
+<meta name="description" content="zero-dependency downloader for GitHub release assets.">
+<style>
+  :root {
+    --bg:    #0a0a0a;
+    --panel: #141414;
+    --fg:    #e5e5e5;
+    --dim:   #888;
+    --amber: #ffb000;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 4rem;
+  }
+  h1 {
+    color: var(--amber);
+    font-size: 2.75rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+  }
+  h1::before {
+    content: "▎";
+    color: var(--amber);
+    margin-right: 0.25rem;
+  }
+  .tagline {
+    color: var(--dim);
+    margin: 0 0 3rem;
+    font-size: 1rem;
+  }
+  .label {
+    color: var(--dim);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 2.5rem 0 0.5rem;
+  }
+  pre {
+    background: var(--panel);
+    color: var(--amber);
+    padding: 1rem 1.25rem;
+    border-left: 2px solid var(--amber);
+    overflow-x: auto;
+    margin: 0;
+    user-select: all;
+    font-size: 0.95rem;
+  }
+  a {
+    color: var(--amber);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--amber);
+  }
+  a:hover { border-bottom-style: solid; }
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #222;
+    color: var(--dim);
+    font-size: 0.875rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>ghget</h1>
+  <p class="tagline">zero-dependency downloader for GitHub release assets.</p>
+
+  <p class="label">install</p>
+  <pre>curl -fsSL https://schmidtw.github.io/ghget/install.sh | sh</pre>
+
+  <p class="label">use</p>
+  <pre>ghget https://github.com/OWNER/REPO/releases/download/TAG/ASSET</pre>
+
+  <footer>
+    <a href="https://github.com/schmidtw/ghget">source</a>
+    <a href="https://github.com/schmidtw/ghget/releases">releases</a>
+    <a href="https://github.com/schmidtw/ghget/issues">issues</a>
+  </footer>
+</main>
+</body>
+</html>
